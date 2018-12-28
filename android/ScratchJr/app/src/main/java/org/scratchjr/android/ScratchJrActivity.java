@@ -83,6 +83,9 @@ public class ScratchJrActivity
     /** Manages recording of new sounds */
     private SoundRecorderManager _soundRecorderManager;
 
+    /** Manages network connections */
+    private ConnectManager _connectManager;
+
     /** Set to true when the app is initialized. This is used for unit testing. */
     private boolean _appInitialized = false;
 
@@ -116,6 +119,7 @@ public class ScratchJrActivity
         _ioManager = new IOManager(this);
         _soundManager = new SoundManager(this);
         _soundRecorderManager = new SoundRecorderManager(this);
+        _connectManager = new ConnectManager(this);
         setContentView(R.layout.activity_scratch_jr);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         _container = (RelativeLayout) findViewById(R.id.container);
@@ -154,7 +158,7 @@ public class ScratchJrActivity
         }
 
         ScratchJrApplication application = (ScratchJrApplication) getApplication();
-        _tracker = application.getDefaultTracker();
+        //_tracker = application.getDefaultTracker();
 
         // When System UI bar is displayed, wait one second and then re-assert immersive mode.
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new OnSystemUiVisibilityChangeListener() {
@@ -258,6 +262,7 @@ public class ScratchJrActivity
         _databaseManager.open();
         _soundManager.open();
         _soundRecorderManager.open();
+        _connectManager.open();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -282,6 +287,7 @@ public class ScratchJrActivity
         _databaseManager.close();
         _soundManager.close();
         _soundRecorderManager.close();
+        _connectManager.close();
     }
     
     @Override
@@ -338,6 +344,10 @@ public class ScratchJrActivity
 
     public SoundRecorderManager getSoundRecorderManager() {
         return _soundRecorderManager;
+    }
+
+    public ConnectManager getConnectManager() {
+        return _connectManager;
     }
 
     private void setImmersiveMode() {
@@ -406,8 +416,8 @@ public class ScratchJrActivity
 
                 // Track page load
                 String[] parts = url.split("/");
-                _tracker.setScreenName(parts[parts.length - 1]);
-                _tracker.send(new HitBuilders.ScreenViewBuilder().build());
+                //_tracker.setScreenName(parts[parts.length - 1]);
+                //_tracker.send(new HitBuilders.ScreenViewBuilder().build());
             }
         });
         _webView.requestFocus(View.FOCUS_DOWN);
@@ -457,6 +467,14 @@ public class ScratchJrActivity
 
     public void setSplashDone(boolean done) {
         _splashDone = done;
+    }
+
+    public void discoverRover() {
+        _connectManager.discoverServices();
+    }
+
+    public void connectToRover() {
+        _connectManager.connect2Rover();
     }
 
     /**

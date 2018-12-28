@@ -84,6 +84,19 @@ public class JavaScriptDirectInterface {
     }
 
     //////////////////////////////////////////////////////////////////////
+    // connection_*
+    @JavascriptInterface
+    public void connection_discoverRover() {
+        Log.i(LOG_TAG, "Discovering rover");
+        _activity.discoverRover();
+    }
+
+    @JavascriptInterface
+    public void connection_connectToRover() {
+        Log.i(LOG_TAG, "Discovering rover");
+        _activity.connectToRover();
+    }
+    //////////////////////////////////////////////////////////////////////
     // audio_*
 
     @JavascriptInterface
@@ -623,7 +636,7 @@ public class JavaScriptDirectInterface {
     // Analytics
     @JavascriptInterface
     public void analyticsEvent(String category, String action, String label, long value) {
-        _application.getDefaultTracker().send(new HitBuilders.EventBuilder()
-                .setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+       // _application.getDefaultTracker().send(new HitBuilders.EventBuilder()
+      //          .setCategory(category).setAction(action).setLabel(label).setValue(value).build());
     }
 }

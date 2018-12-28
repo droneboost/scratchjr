@@ -128,6 +128,39 @@
     background: blue;
 }
 
+.go1 {
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    top: ${css_vh(0.65)};
+    left: ${css_vh(75)};
+    width: ${css_vh(8.33)};
+    height: ${css_vh(8.33)};
+    background:  url('../assets/ui/link_inactive.png');
+    background-size: 100%;
+}
+
+.go1.on {background:  url('../assets/ui/link_active.png'); background-size: 100%; }
+
+.go1.off:active {background:  url('../assets/ui/link_inactive.png'); background-size: 100%; }
+
+.go1.off {background:  url('../assets/ui/link_inactive.png'); background-size: 100%; }
+
+.go1.on:active {background:  url('../assets/ui/link_active.png'); background-size: 100%; }
+
+.go1.on.presentationmode, .go1.off.presentationmode {
+    position: absolute;
+    right: ${css_vh(0)};
+    left: initial;
+    top: 0px;
+}
+
+.go1.on.nopresent, .go1.off.nopresent {
+    position: absolute;
+    top: ${css_vh(0.65)};
+    left: ${css_vh(75)};
+    background: blue;
+}
 
 /* stage text edit */
 

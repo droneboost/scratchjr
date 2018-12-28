@@ -707,6 +707,7 @@ export default class UI {
         }
         UI.creatTopBarClicky(div, 'grid', 'gridToggle off', UI.switchGrid);
         UI.creatTopBarClicky(div, 'go', 'go on', UI.toggleRun);
+	UI.creatTopBarClicky(div, 'go1', 'go1 on', UI.connectRover);
         UI.creatTopBarClicky(div, 'resetall', 'resetall', UI.resetAllSprites);
         UI.creatTopBarClicky(div, 'full', 'fullscreen', ScratchJr.fullScreen);
         UI.toggleGrid(true);
@@ -732,6 +733,11 @@ export default class UI {
         } else {
             ScratchJr.stopStripsFromTop(e);
         }
+    }
+	
+    static connectRover (e) {	
+        AndroidInterface.log("connecting Rover from javascript");
+        AndroidInterface.connection_connectToRover();
     }
 
     static switchGrid () {

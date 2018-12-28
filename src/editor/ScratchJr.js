@@ -427,7 +427,7 @@ export default class ScratchJr {
             gn('go').className = isOff ? 'go on' : 'go off';
             Grid.updateCursor();
         }
-        if (ScratchJr.getSprite()) {
+        if (ScratchJr.getSprite()) {                                                                                                                                                                                                                                                                                                                                                                                
             if (isOff && !inFullscreen) {
                 ScratchJr.getSprite().select();
             } else {
