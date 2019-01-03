@@ -177,6 +177,7 @@ public class ScratchJrActivity
         });
 
         requestPermissions();
+        _connectManager.open();
     }
 
     public void requestPermissions() {
@@ -262,7 +263,7 @@ public class ScratchJrActivity
         _databaseManager.open();
         _soundManager.open();
         _soundRecorderManager.open();
-        _connectManager.open();
+        //_connectManager.open();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -287,7 +288,7 @@ public class ScratchJrActivity
         _databaseManager.close();
         _soundManager.close();
         _soundRecorderManager.close();
-        _connectManager.close();
+        //_connectManager.close();
     }
     
     @Override

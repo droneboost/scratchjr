@@ -738,6 +738,7 @@ export default class UI {
     static connectRover (e) {	
         AndroidInterface.log("connecting Rover from javascript");
         AndroidInterface.connection_connectToRover();
+        alert("connect to rover from JS");
     }
 
     static switchGrid () {

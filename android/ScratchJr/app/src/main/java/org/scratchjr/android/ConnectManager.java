@@ -9,8 +9,8 @@ import android.util.Log;
 
 
 public class ConnectManager {
-    public static final String SERVICE_TYPE = "_printer._tcp.";
-    public String mServiceName = "MegaPrinter";
+    public static final String SERVICE_TYPE = "_http._tcp.";
+    public String mServiceName = "ScratchJrRover";
 
     private static final String LOG_TAG = "ScratchJr.ConnMan";
 
@@ -25,10 +25,13 @@ public class ConnectManager {
     private RoverConnection _roverConnection;
     private Handler _updateHandler;
 
+    private boolean _isStarted;
+
     public ConnectManager(ScratchJrActivity application) {
         _application = application;
         _context = application.getApplicationContext();
         _nsdManager = (NsdManager)_context.getSystemService(_context.NSD_SERVICE);
+        _isStarted = false;
         //_roverConnection = new
 
         _updateHandler = new Handler() {
@@ -39,11 +42,14 @@ public class ConnectManager {
             }
         };
 
+        _roverConnection = new RoverConnection(_updateHandler);
+
         _nsdDiscoveryListener = new NsdManager.DiscoveryListener() {
 
             // Called as soon as service discovery begins.
             @Override
             public void onDiscoveryStarted(String regType) {
+                _isStarted = true;
                 Log.e(LOG_TAG, "Service discovery started");
             }
 
@@ -55,8 +61,8 @@ public class ConnectManager {
                     // Service type is the string containing the protocol and
                     // transport layer for this service.
                     Log.e(LOG_TAG, "Unknown Service Type: " + service.getServiceType());
-                } else if (service.getServiceName().contains(mServiceName)){
-                    Log.d(LOG_TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Same machine: Find MegaPrinter!");
+                } else if (service.getServiceName().equals(mServiceName)){
+                    Log.d(LOG_TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Same machine: Find ScratchJrRover!");
                     _nsdManager.resolveService(service, _nsdResolveListener);
                 }
             }
@@ -66,6 +72,9 @@ public class ConnectManager {
                 // When the network service is no longer available.
                 // Internal bookkeeping code goes here.
                 Log.e(LOG_TAG, "service lost: " + service);
+                if (_service == service) {
+                    _service = null;
+                }
             }
 
             @Override
@@ -96,7 +105,6 @@ public class ConnectManager {
                 Log.e(LOG_TAG, "Resolve Succeeded. " + serviceInfo);
                 if (serviceInfo.getServiceName().equals("MegaPrinter")) {
                     Log.d(LOG_TAG, "################################## Same IP.");
-                    return;
                 }
                 _service = serviceInfo;
             }
@@ -112,12 +120,16 @@ public class ConnectManager {
     }
 
     public void discoverServices() {
-        _nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, _nsdDiscoveryListener);
-        Log.d(LOG_TAG, "##### Start discovering services #####");
+        if(_isStarted == false) {
+            _nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, _nsdDiscoveryListener);
+            Log.d(LOG_TAG, "##### Start discovering services #####");
+        } else {
+            Log.d(LOG_TAG, "##### Discovery already starte4d, ignore the request #####");
+        }
     }
 
     public void stopDiscovery() {
-        if (_nsdDiscoveryListener != null) {
+        if (_isStarted == true && _nsdDiscoveryListener != null) {
             try {
                 _nsdManager.stopServiceDiscovery(_nsdDiscoveryListener);
                 Log.d(LOG_TAG, "##### Stop discovering services #####");
@@ -133,6 +145,12 @@ public class ConnectManager {
         if (_service != null) {
             Log.d(LOG_TAG, "Connecting.");
             _roverConnection.connectToServer(_service.getHost(), _service.getPort());
+            try {
+                Thread.sleep(1000);
+            }catch (java.lang.InterruptedException e) {
+
+            }
+            sendCommand();
         } else {
             Log.d(LOG_TAG, "No service to connect to!");
         }
